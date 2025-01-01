@@ -20,6 +20,9 @@ public class CitizenPlanDataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        citizenPlanRepo.deleteAll();
+
         CitizenPlan citizen1 = new CitizenPlan();
         citizen1.setCitizenName("John");
         citizen1.setGender("Male");
@@ -147,6 +150,11 @@ public class CitizenPlanDataLoader implements ApplicationRunner {
                 , citizen9, citizen10, citizen11, citizen12);
 
         citizenPlanRepo.saveAll(list);
+        List<String> planName = citizenPlanRepo.getPlanName();
+      planName.forEach(e->System.out.println(e));
+
+        List<String> planStatus = citizenPlanRepo.getPlanStatus();
+        planStatus.forEach(e->System.out.println(e));
 
     }
 }
