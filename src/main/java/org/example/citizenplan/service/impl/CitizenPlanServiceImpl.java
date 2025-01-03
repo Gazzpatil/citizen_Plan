@@ -1,5 +1,12 @@
 package org.example.citizenplan.service.impl;
 
+
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.*;
@@ -53,6 +60,14 @@ public class CitizenPlanServiceImpl implements CitizenPlanService {
     @Override
     public boolean exportToExcel(HttpServletResponse response) throws IOException {
         List<CitizenPlan> citizenPlanRepoAll = citizenPlanRepo.findAll();
+
+
+
+//        XSSFWorkbook is used to export ".xlsh" file
+//        Workbook workbook = new XSSFWorkbook();
+
+
+//      HSSFWorkbook is used to create '.xls' file
         Workbook workbook=new HSSFWorkbook();
         Sheet sheet= workbook.createSheet("CitizenPlan");
         Row rowHeader = sheet.createRow(0);
@@ -98,8 +113,15 @@ public class CitizenPlanServiceImpl implements CitizenPlanService {
             row1.createCell(2).setCellValue(citizenPlan.getGender());
             row1.createCell(3).setCellValue(citizenPlan.getPlanName());
             row1.createCell(4).setCellValue(citizenPlan.getPlanStatus());
-            row1.createCell(5).setCellValue(citizenPlan.getPlanStartDate());
-            row1.createCell(6).setCellValue(citizenPlan.getPlanEndDate());
+            if(null != citizenPlan.getPlanStartDate()) {
+                row1.createCell(5).setCellValue(citizenPlan.getPlanStartDate());
+            }else
+                row1.createCell(5).setCellValue("N/A");
+           if(null != citizenPlan.getPlanEndDate()) {
+               row1.createCell(6).setCellValue(citizenPlan.getPlanEndDate());
+           }
+           else
+               row1.createCell(6).setCellValue("N/A");
             if(citizenPlan.getBenefitAmt() != null)
                 row1.createCell(7).setCellValue(citizenPlan.getBenefitAmt());
             else
@@ -117,7 +139,74 @@ public class CitizenPlanServiceImpl implements CitizenPlanService {
     }
 
     @Override
-    public boolean exportToPdf() {
-        return false;
+    public boolean exportToPdf(HttpServletResponse response) throws IOException {
+
+        // Set response properties for PDF
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=citizen_plans.pdf");
+
+        // Initialize document and writer
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        // Add title to the document
+        Paragraph paragraph = new Paragraph("Citizen Plans");
+        paragraph.setAlignment(Element.ALIGN_CENTER);
+        paragraph.setSpacingAfter(10);
+        document.add(paragraph);
+
+        // Create table with 8 columns
+        PdfPTable table = new PdfPTable(8);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10);
+
+        // Add headers
+        table.addCell("Id");
+        table.addCell("Citizen Name");
+        table.addCell("Gender");
+        table.addCell("Plan Name");
+        table.addCell("Plan Status");
+        table.addCell("Plan Start Date");
+        table.addCell("Plan End Date");
+        table.addCell("Beneficial Amount");
+
+        // Populate rows
+        for (CitizenPlan c : citizenPlanRepo.findAll()) {
+            table.addCell(String.valueOf(c.getCitizenId()));
+            table.addCell(c.getCitizenName());
+            table.addCell(c.getGender());
+            table.addCell(c.getPlanName());
+            table.addCell(c.getPlanStatus());
+
+            if (c.getPlanStartDate() != null) {
+                table.addCell(String.valueOf(c.getPlanStartDate()));
+            } else {
+                table.addCell("N/A");
+            }
+
+            if (c.getPlanEndDate() != null) {
+                table.addCell(String.valueOf(c.getPlanEndDate()));
+            } else {
+                table.addCell("N/A");
+            }
+
+            if (c.getBenefitAmt() != null) {
+                table.addCell(String.valueOf(c.getBenefitAmt()));
+            } else {
+                table.addCell("N/A");
+            }
+        }
+
+        // Add the table to the document
+        document.add(table);
+
+        // Close the document
+        document.close();
+
+        return true;
     }
+
+
+
 }

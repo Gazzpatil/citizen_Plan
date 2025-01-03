@@ -8,6 +8,7 @@ import org.example.citizenplan.service.CitizenPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,14 @@ import java.util.List;
 public class CitizenController {
     @Autowired
    CitizenPlanService citizenPlanService;
+
+    @GetMapping("/exportPdf")
+    public void exportPdf(HttpServletResponse response) throws IOException {
+        System.out.println("********* PDF Controller *****************");
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=CitizenPlan.pdf");
+        citizenPlanService.exportToPdf(response);
+    }
 
     @RequestMapping("/exportExcel")
     public void exportExcel(HttpServletResponse response) throws IOException {

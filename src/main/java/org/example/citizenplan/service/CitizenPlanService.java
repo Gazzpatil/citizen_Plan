@@ -24,7 +24,7 @@ public interface CitizenPlanService {
      */
     boolean exportToExcel(HttpServletResponse response) throws IOException;
 
-    boolean exportToPdf();
+    boolean exportToPdf(HttpServletResponse response) throws IOException;
 
 
 
