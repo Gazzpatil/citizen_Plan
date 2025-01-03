@@ -2,9 +2,11 @@ package org.example.citizenplan.dto;
 
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
+@ToString
 @Data
 public class SearchResult {
 
@@ -14,9 +16,9 @@ public class SearchResult {
 
     private String gender;
 
-    private LocalDate planStartDate;
+    private String planStartDate;
 
-    private LocalDate planEndDate;
+    private String planEndDate;
 
     public String getPlanName() {
         return planName;
@@ -42,19 +44,30 @@ public class SearchResult {
         this.gender = gender;
     }
 
-    public LocalDate getPlanStartDate() {
+    public String getPlanStartDate() {
         return planStartDate;
     }
 
-    public void setPlanStartDate(LocalDate planStartDate) {
+    public void setPlanStartDate(String planStartDate) {
         this.planStartDate = planStartDate;
     }
 
-    public LocalDate getPlanEndDate() {
+    public String getPlanEndDate() {
         return planEndDate;
     }
 
-    public void setPlanEndDate(LocalDate planEndDate) {
+    public void setPlanEndDate(String planEndDate) {
         this.planEndDate = planEndDate;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchResult{" +
+                "planName='" + planName + '\'' +
+                ", planStatus='" + planStatus + '\'' +
+                ", gender='" + gender + '\'' +
+                ", planStartDate='" + planStartDate + '\'' +
+                ", planEndDate='" + planEndDate + '\'' +
+                '}';
     }
 }

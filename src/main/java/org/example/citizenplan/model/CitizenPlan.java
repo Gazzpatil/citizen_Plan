@@ -3,15 +3,13 @@ package org.example.citizenplan.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
+
 import lombok.ToString;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.time.LocalDate;
 
 
 @Data
-@Setter
 @Getter
 @Entity
 @ToString
@@ -120,5 +118,20 @@ public class CitizenPlan {
         this.citizenId = citizenId;
     }
 
-
+    @Override
+    public String toString() {
+        return "CitizenPlan{" +
+                "citizenId=" + citizenId +
+                ", citizenName='" + citizenName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", planName='" + planName + '\'' +
+                ", planStatus='" + planStatus + '\'' +
+                ", planStartDate=" + planStartDate +
+                ", planEndDate=" + planEndDate +
+                ", benefitAmt=" + benefitAmt +
+                ", denialReason='" + denialReason + '\'' +
+                ", terminationDate=" + terminationDate +
+                ", terminationReason='" + terminationReason + '\'' +
+                '}';
+    }
 }
